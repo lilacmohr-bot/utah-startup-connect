@@ -9,38 +9,194 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as NavigatorRouteImport } from './routes/navigator'
+import { Route as MapRouteImport } from './routes/map'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MapIndexRouteImport } from './routes/map.index'
+import { Route as MapAddCompanyRouteImport } from './routes/map.add-company'
+import { Route as AuthSignupRouteImport } from './routes/auth.signup'
+import { Route as AuthLoginRouteImport } from './routes/auth.login'
+import { Route as MapCompanyIdRouteImport } from './routes/map.company.$id'
+import { Route as MapClaimIdRouteImport } from './routes/map.claim.$id'
 
+const NavigatorRoute = NavigatorRouteImport.update({
+  id: '/navigator',
+  path: '/navigator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MapRoute = MapRouteImport.update({
+  id: '/map',
+  path: '/map',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MapIndexRoute = MapIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MapRoute,
+} as any)
+const MapAddCompanyRoute = MapAddCompanyRouteImport.update({
+  id: '/add-company',
+  path: '/add-company',
+  getParentRoute: () => MapRoute,
+} as any)
+const AuthSignupRoute = AuthSignupRouteImport.update({
+  id: '/auth/signup',
+  path: '/auth/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/auth/login',
+  path: '/auth/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MapCompanyIdRoute = MapCompanyIdRouteImport.update({
+  id: '/company/$id',
+  path: '/company/$id',
+  getParentRoute: () => MapRoute,
+} as any)
+const MapClaimIdRoute = MapClaimIdRouteImport.update({
+  id: '/claim/$id',
+  path: '/claim/$id',
+  getParentRoute: () => MapRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/dashboard': typeof DashboardRoute
+  '/map': typeof MapRouteWithChildren
+  '/navigator': typeof NavigatorRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/signup': typeof AuthSignupRoute
+  '/map/add-company': typeof MapAddCompanyRoute
+  '/map/': typeof MapIndexRoute
+  '/map/claim/$id': typeof MapClaimIdRoute
+  '/map/company/$id': typeof MapCompanyIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/dashboard': typeof DashboardRoute
+  '/navigator': typeof NavigatorRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/signup': typeof AuthSignupRoute
+  '/map/add-company': typeof MapAddCompanyRoute
+  '/map': typeof MapIndexRoute
+  '/map/claim/$id': typeof MapClaimIdRoute
+  '/map/company/$id': typeof MapCompanyIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/dashboard': typeof DashboardRoute
+  '/map': typeof MapRouteWithChildren
+  '/navigator': typeof NavigatorRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/signup': typeof AuthSignupRoute
+  '/map/add-company': typeof MapAddCompanyRoute
+  '/map/': typeof MapIndexRoute
+  '/map/claim/$id': typeof MapClaimIdRoute
+  '/map/company/$id': typeof MapCompanyIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/dashboard'
+    | '/map'
+    | '/navigator'
+    | '/auth/login'
+    | '/auth/signup'
+    | '/map/add-company'
+    | '/map/'
+    | '/map/claim/$id'
+    | '/map/company/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin'
+    | '/dashboard'
+    | '/navigator'
+    | '/auth/login'
+    | '/auth/signup'
+    | '/map/add-company'
+    | '/map'
+    | '/map/claim/$id'
+    | '/map/company/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/dashboard'
+    | '/map'
+    | '/navigator'
+    | '/auth/login'
+    | '/auth/signup'
+    | '/map/add-company'
+    | '/map/'
+    | '/map/claim/$id'
+    | '/map/company/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  DashboardRoute: typeof DashboardRoute
+  MapRoute: typeof MapRouteWithChildren
+  NavigatorRoute: typeof NavigatorRoute
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthSignupRoute: typeof AuthSignupRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/navigator': {
+      id: '/navigator'
+      path: '/navigator'
+      fullPath: '/navigator'
+      preLoaderRoute: typeof NavigatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/map': {
+      id: '/map'
+      path: '/map'
+      fullPath: '/map'
+      preLoaderRoute: typeof MapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +204,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/map/': {
+      id: '/map/'
+      path: '/'
+      fullPath: '/map/'
+      preLoaderRoute: typeof MapIndexRouteImport
+      parentRoute: typeof MapRoute
+    }
+    '/map/add-company': {
+      id: '/map/add-company'
+      path: '/add-company'
+      fullPath: '/map/add-company'
+      preLoaderRoute: typeof MapAddCompanyRouteImport
+      parentRoute: typeof MapRoute
+    }
+    '/auth/signup': {
+      id: '/auth/signup'
+      path: '/auth/signup'
+      fullPath: '/auth/signup'
+      preLoaderRoute: typeof AuthSignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/login': {
+      id: '/auth/login'
+      path: '/auth/login'
+      fullPath: '/auth/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/map/company/$id': {
+      id: '/map/company/$id'
+      path: '/company/$id'
+      fullPath: '/map/company/$id'
+      preLoaderRoute: typeof MapCompanyIdRouteImport
+      parentRoute: typeof MapRoute
+    }
+    '/map/claim/$id': {
+      id: '/map/claim/$id'
+      path: '/claim/$id'
+      fullPath: '/map/claim/$id'
+      preLoaderRoute: typeof MapClaimIdRouteImport
+      parentRoute: typeof MapRoute
+    }
   }
 }
 
+interface MapRouteChildren {
+  MapAddCompanyRoute: typeof MapAddCompanyRoute
+  MapIndexRoute: typeof MapIndexRoute
+  MapClaimIdRoute: typeof MapClaimIdRoute
+  MapCompanyIdRoute: typeof MapCompanyIdRoute
+}
+
+const MapRouteChildren: MapRouteChildren = {
+  MapAddCompanyRoute: MapAddCompanyRoute,
+  MapIndexRoute: MapIndexRoute,
+  MapClaimIdRoute: MapClaimIdRoute,
+  MapCompanyIdRoute: MapCompanyIdRoute,
+}
+
+const MapRouteWithChildren = MapRoute._addFileChildren(MapRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  DashboardRoute: DashboardRoute,
+  MapRoute: MapRouteWithChildren,
+  NavigatorRoute: NavigatorRoute,
+  AuthLoginRoute: AuthLoginRoute,
+  AuthSignupRoute: AuthSignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
