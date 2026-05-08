@@ -17,6 +17,7 @@ import { Route as MapAddCompanyRouteImport } from './routes/map.add-company'
 import { Route as AuthSignupRouteImport } from './routes/auth.signup'
 import { Route as AuthLoginRouteImport } from './routes/auth.login'
 import { Route as MapCompanyIdRouteImport } from './routes/map.company.$id'
+import { Route as MapClaimIdRouteImport } from './routes/map.claim.$id'
 
 const NavigatorRoute = NavigatorRouteImport.update({
   id: '/navigator',
@@ -58,6 +59,11 @@ const MapCompanyIdRoute = MapCompanyIdRouteImport.update({
   path: '/company/$id',
   getParentRoute: () => MapRoute,
 } as any)
+const MapClaimIdRoute = MapClaimIdRouteImport.update({
+  id: '/claim/$id',
+  path: '/claim/$id',
+  getParentRoute: () => MapRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -67,6 +73,7 @@ export interface FileRoutesByFullPath {
   '/auth/signup': typeof AuthSignupRoute
   '/map/add-company': typeof MapAddCompanyRoute
   '/map/': typeof MapIndexRoute
+  '/map/claim/$id': typeof MapClaimIdRoute
   '/map/company/$id': typeof MapCompanyIdRoute
 }
 export interface FileRoutesByTo {
@@ -76,6 +83,7 @@ export interface FileRoutesByTo {
   '/auth/signup': typeof AuthSignupRoute
   '/map/add-company': typeof MapAddCompanyRoute
   '/map': typeof MapIndexRoute
+  '/map/claim/$id': typeof MapClaimIdRoute
   '/map/company/$id': typeof MapCompanyIdRoute
 }
 export interface FileRoutesById {
@@ -87,6 +95,7 @@ export interface FileRoutesById {
   '/auth/signup': typeof AuthSignupRoute
   '/map/add-company': typeof MapAddCompanyRoute
   '/map/': typeof MapIndexRoute
+  '/map/claim/$id': typeof MapClaimIdRoute
   '/map/company/$id': typeof MapCompanyIdRoute
 }
 export interface FileRouteTypes {
@@ -99,6 +108,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/map/add-company'
     | '/map/'
+    | '/map/claim/$id'
     | '/map/company/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -108,6 +118,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/map/add-company'
     | '/map'
+    | '/map/claim/$id'
     | '/map/company/$id'
   id:
     | '__root__'
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/map/add-company'
     | '/map/'
+    | '/map/claim/$id'
     | '/map/company/$id'
   fileRoutesById: FileRoutesById
 }
@@ -187,18 +199,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MapCompanyIdRouteImport
       parentRoute: typeof MapRoute
     }
+    '/map/claim/$id': {
+      id: '/map/claim/$id'
+      path: '/claim/$id'
+      fullPath: '/map/claim/$id'
+      preLoaderRoute: typeof MapClaimIdRouteImport
+      parentRoute: typeof MapRoute
+    }
   }
 }
 
 interface MapRouteChildren {
   MapAddCompanyRoute: typeof MapAddCompanyRoute
   MapIndexRoute: typeof MapIndexRoute
+  MapClaimIdRoute: typeof MapClaimIdRoute
   MapCompanyIdRoute: typeof MapCompanyIdRoute
 }
 
 const MapRouteChildren: MapRouteChildren = {
   MapAddCompanyRoute: MapAddCompanyRoute,
   MapIndexRoute: MapIndexRoute,
+  MapClaimIdRoute: MapClaimIdRoute,
   MapCompanyIdRoute: MapCompanyIdRoute,
 }
 
