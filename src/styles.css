@@ -63,25 +63,32 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --background: oklch(0.965 0.015 75);          /* parchment #F5F0E8 */
+  --foreground: oklch(0.18 0.01 60);            /* near-black */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
+  --card-foreground: oklch(0.18 0.01 60);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
+  --popover-foreground: oklch(0.18 0.01 60);
+  --primary: oklch(0.52 0.16 38);               /* canyon red #C1440E */
+  --primary-foreground: oklch(0.97 0.02 75);
+  --secondary: oklch(0.78 0.09 55);             /* sandstone #E8A87C */
+  --secondary-foreground: oklch(0.18 0.01 60);
+  --muted: oklch(0.92 0.02 70);
+  --muted-foreground: oklch(0.45 0.02 60);
+  --accent: oklch(0.58 0.10 230);               /* desert sky #2E86AB */
+  --accent-foreground: oklch(0.97 0.02 75);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
+  --border: oklch(0.85 0.02 70);
+  --input: oklch(0.88 0.02 70);
+  --ring: oklch(0.52 0.16 38);
+  --canyon: oklch(0.52 0.16 38);
+  --night: oklch(0.22 0.04 280);                /* deep night #1A1A2E */
+  --gradient-canyon: linear-gradient(135deg, oklch(0.52 0.16 38) 0%, oklch(0.22 0.04 280) 100%);
+  --shadow-warm: 0 10px 40px -10px oklch(0.52 0.16 38 / 0.35);
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-accent: 'Space Grotesk', system-ui, sans-serif;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
