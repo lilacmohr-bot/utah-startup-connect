@@ -53,7 +53,7 @@ function autoTag(
   if (/\b(aerospace|defense|aviation|space)\b/.test(text)) industries.push("aerospace");
   if (/\b(energy|cleantech|clean tech|solar|renewable|climate|sustainability)\b/.test(text)) industries.push("energy");
   if (/\b(outdoor|retail|consumer|e-commerce|ecommerce|apparel|gear)\b/.test(text)) industries.push("outdoor");
-  if (/\b(manufactur)\b/.test(text)) industries.push("manufacturing");
+  if (/\bmanufactur\w*\b/.test(text)) industries.push("manufacturing");
 
   const stages: string[] = [];
   if (/\b(early.?stage|pre.?seed|idea|ideation|student|university)\b/.test(text)) {
@@ -212,7 +212,7 @@ serve(async (req) => {
       for (const ev of scraped) {
         if (!ev.title?.trim()) continue;
 
-        const sourceId = `${source.id}_${slugify(ev.title + (ev.start_date ?? ""))}`;
+        const sourceId = `${source.id}_${slugify(ev.url ?? ev.title)}`;
         const { industries, stages, topics } = autoTag(ev.title, ev.description ?? "");
 
         const row = {
