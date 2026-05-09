@@ -8,15 +8,9 @@ const cors = {
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: cors });
   try {
-    const { messages, quiz, resources } = await req.json();
+    const { messages, query, resources } = await req.json();
     const KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!KEY) throw new Error("LOVABLE_API_KEY not configured");
-
-    const stage = quiz?.stage ?? "early-stage";
-    const industry = quiz?.industry ?? "a Utah company";
-    const location = quiz?.location ?? "Utah";
-    const needs = (quiz?.needs ?? []).join(", ") || "general guidance";
-    const community = quiz?.community && quiz.community !== "Any" ? quiz.community : "";
 
     const resourceList = Array.isArray(resources) && resources.length > 0
       ? resources.map((r: any, i: number) => {
@@ -39,11 +33,8 @@ serve(async (req) => {
 ## YOUR ROLE
 You give specific, actionable advice about the programs and resources available to this founder. Every recommendation must reference a real program from the list below by name. Do not invent programs that are not in the list.
 
-## THE USER'S PROFILE
-- **Stage**: ${stage}
-- **Industry**: ${industry}
-- **Location**: ${location}
-- **Needs**: ${needs}${community ? `\n- **Community**: ${community}` : ""}
+## WHAT THE FOUNDER DESCRIBED
+"${query ?? "Not provided"}"
 
 ## MATCHED PROGRAMS FOR THIS FOUNDER
 These are the actual programs from the 5iO database matched to this user's profile. Use these as your primary source of truth — reference them by their exact titles and use their descriptions to answer questions specifically:
