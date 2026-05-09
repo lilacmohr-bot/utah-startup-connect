@@ -38,6 +38,7 @@ function Index() {
     sectors: number;
     latest: { name: string; sector: string | null; id: string } | null;
   }>({ companies: 0, resources: 0, sectors: 0, latest: null });
+  const [guideOpen, setGuideOpen] = useState(false);
   const flyToRef = useRef<HeroLiveMapHandle | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -340,52 +341,56 @@ function Index() {
         {/* SR-only h1 for SEO/a11y — hero is intentionally a clean live map */}
         <h1 className="sr-only">Navigate the Silicon Slopes — Utah's startup ecosystem platform</h1>
 
-        {/* Guide prompt */}
-        <div className="relative z-10 flex flex-col items-center gap-4 text-center px-6">
-          <Link to="/navigator" search={{} as any} className="group flex flex-col items-center gap-2">
-            <div className="relative">
-              <img
-                src={buildAvatarUrl("navigator-guide", {
-                  hair: "shortFlat", hairColor: "black", skinColor: "light",
-                  facialHair: "_none", accessories: "prescription01",
-                  clothing: "blazerAndShirt", clothingColor: "blue03",
-                  eyeType: "default", eyebrowType: "default", mouthType: "smile",
-                })}
-                alt="Guide"
-                className="h-20 w-20 rounded-full border-2 border-white/20 bg-white/10 shadow-xl backdrop-blur-sm transition group-hover:scale-105"
-              />
-              <span className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-background bg-emerald-500" />
-            </div>
-            <div>
-              <p className="text-sm font-bold text-white">Guide</p>
-              <p className="text-[11px] text-white/50">AI · Navigator</p>
-            </div>
-          </Link>
-          <p className="max-w-xs text-sm text-white/70 leading-relaxed">
-            Describe your startup and I'll find the right Utah programs for you.
-          </p>
-          <div className="flex w-full max-w-sm items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-md focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/30">
-            <Search className="h-4 w-4 text-white/40 shrink-0" />
-            <input
-              type="text"
-              placeholder="e.g. seed-stage biotech in Provo…"
-              className="flex-1 bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none"
-              value={aiSearch}
-              onChange={(e) => setAiSearch(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleAiSearch()}
-            />
-            <Button
-              size="sm"
-              onClick={handleAiSearch}
-              className="h-7 rounded-full px-4 text-xs shadow-md shadow-primary/20 shrink-0"
-            >
-              Ask Guide
-            </Button>
-          </div>
-        </div>
-
-        {/* Ecosystem Stats Banner */}
+        {/* Ecosystem Stats Banner — guide widget anchored to its dividing line */}
         <div className="relative z-10 mt-auto w-full max-w-7xl border-t border-foreground/10 pt-8 pb-4">
+          {/* Guide widget — straddles the border-t line at bottom-left */}
+          <div className="absolute top-0 left-0 -translate-y-1/2 z-20">
+            {guideOpen && (
+              <div className="absolute bottom-full left-0 mb-3 w-72 rounded-2xl border border-white/15 bg-card/95 backdrop-blur-xl shadow-2xl p-4">
+                <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
+                  Describe your startup and I'll find the right Utah programs for you.
+                </p>
+                <div className="flex items-center gap-2 rounded-full border border-white/20 bg-background/60 px-3 py-1.5 focus-within:border-primary/60">
+                  <Search className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                  <input
+                    type="text"
+                    placeholder="e.g. seed-stage biotech in Provo…"
+                    className="flex-1 bg-transparent text-sm placeholder:text-muted-foreground focus:outline-none"
+                    value={aiSearch}
+                    onChange={(e) => setAiSearch(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleAiSearch()}
+                    autoFocus
+                  />
+                  <Button size="sm" onClick={handleAiSearch} className="h-6 rounded-full px-3 text-xs shrink-0">
+                    Ask
+                  </Button>
+                </div>
+              </div>
+            )}
+            <button
+              onClick={() => setGuideOpen((o) => !o)}
+              className="flex items-center gap-2.5 rounded-full border border-white/20 bg-background/80 pl-1 pr-3 py-1 backdrop-blur-md shadow-lg hover:bg-background/95 transition"
+            >
+              <div className="relative shrink-0">
+                <img
+                  src={buildAvatarUrl("navigator-guide", {
+                    hair: "shortFlat", hairColor: "black", skinColor: "light",
+                    facialHair: "_none", accessories: "prescription01",
+                    clothing: "blazerAndShirt", clothingColor: "blue03",
+                    eyeType: "default", eyebrowType: "default", mouthType: "smile",
+                  })}
+                  alt="Guide"
+                  className="h-9 w-9 rounded-full bg-muted"
+                />
+                <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-background bg-emerald-500" />
+              </div>
+              <div className="text-left">
+                <p className="text-xs font-semibold leading-none text-foreground">Guide</p>
+                <p className="text-[10px] text-muted-foreground">AI · Navigator</p>
+              </div>
+            </button>
+          </div>
+
           <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-6">
             <HeroStat value={heroStats.companies} label="Active Companies" />
             <HeroStat value={heroStats.resources} label="State Resources" />
