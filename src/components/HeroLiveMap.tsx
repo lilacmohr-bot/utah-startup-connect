@@ -201,6 +201,8 @@ export default function HeroLiveMap({
         mapStyle="mapbox://styles/mapbox/light-v11"
         style={{ width: "100%", height: "100%" }}
         attributionControl={false}
+        scrollZoom={false}
+        dragRotate={false}
         interactive
         onLoad={handleLoad}
         onZoom={(e) => setZoom(e.viewState.zoom)}
