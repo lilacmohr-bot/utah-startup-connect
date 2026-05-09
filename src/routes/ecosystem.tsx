@@ -25,7 +25,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-export const Route = createFileRoute("/ecosystem" as any)({
+export const Route = createFileRoute("/ecosystem")({
   head: () => ({
     meta: [
       { title: "Ecosystem Dashboard — 5iO" },
