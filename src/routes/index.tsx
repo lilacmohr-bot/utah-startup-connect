@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import HeroLiveMap, { SECTOR_LEGEND, type HeroLiveMapHandle } from "@/components/HeroLiveMap";
 import { awardBadge } from "@/lib/badges";
 import { supabase } from "@/integrations/supabase/client";
+import { Avatar, buildAvatarUrl } from "@/components/Avatar";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -242,9 +243,10 @@ function Index() {
 
           <div className="flex items-center gap-3 shrink-0 md:ml-3">
             {user ? (
-              <Button size="sm" variant="outline" className="h-9 border-white/20 bg-white/5 text-white backdrop-blur hover:bg-white/10" asChild>
-                <Link to="/dashboard">My Dashboard</Link>
-              </Button>
+              <Link to="/dashboard" className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 pl-1 pr-3 py-1 backdrop-blur hover:bg-white/10 transition">
+                <Avatar userId={user.id} size="small" className="h-7 w-7" />
+                <span className="text-xs font-semibold text-white hidden sm:block">Profile</span>
+              </Link>
             ) : (
               <Button size="sm" className="h-9 shadow-xl shadow-primary/20" asChild>
                 <Link to="/auth">Get Started</Link>
@@ -337,6 +339,50 @@ function Index() {
 
         {/* SR-only h1 for SEO/a11y — hero is intentionally a clean live map */}
         <h1 className="sr-only">Navigate the Silicon Slopes — Utah's startup ecosystem platform</h1>
+
+        {/* Guide prompt */}
+        <div className="relative z-10 flex flex-col items-center gap-4 text-center px-6">
+          <Link to="/navigator" search={{} as any} className="group flex flex-col items-center gap-2">
+            <div className="relative">
+              <img
+                src={buildAvatarUrl("navigator-guide", {
+                  hair: "shortFlat", hairColor: "black", skinColor: "light",
+                  facialHair: "_none", accessories: "prescription01",
+                  clothing: "blazerAndShirt", clothingColor: "blue03",
+                  eyeType: "default", eyebrowType: "default", mouthType: "smile",
+                })}
+                alt="Guide"
+                className="h-20 w-20 rounded-full border-2 border-white/20 bg-white/10 shadow-xl backdrop-blur-sm transition group-hover:scale-105"
+              />
+              <span className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-background bg-emerald-500" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-white">Guide</p>
+              <p className="text-[11px] text-white/50">AI · Navigator</p>
+            </div>
+          </Link>
+          <p className="max-w-xs text-sm text-white/70 leading-relaxed">
+            Describe your startup and I'll find the right Utah programs for you.
+          </p>
+          <div className="flex w-full max-w-sm items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-md focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/30">
+            <Search className="h-4 w-4 text-white/40 shrink-0" />
+            <input
+              type="text"
+              placeholder="e.g. seed-stage biotech in Provo…"
+              className="flex-1 bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none"
+              value={aiSearch}
+              onChange={(e) => setAiSearch(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleAiSearch()}
+            />
+            <Button
+              size="sm"
+              onClick={handleAiSearch}
+              className="h-7 rounded-full px-4 text-xs shadow-md shadow-primary/20 shrink-0"
+            >
+              Ask Guide
+            </Button>
+          </div>
+        </div>
 
         {/* Ecosystem Stats Banner */}
         <div className="relative z-10 mt-auto w-full max-w-7xl border-t border-foreground/10 pt-8 pb-4">
