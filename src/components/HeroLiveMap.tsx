@@ -201,7 +201,7 @@ export default function HeroLiveMap({
             <Marker
               key={c.id}
               longitude={Number(c.longitude)}
-              latitude={Number(c.longitude && c.latitude ? c.latitude : 0)}
+              latitude={Number(c.latitude)}
               anchor="center"
             >
               <Link
