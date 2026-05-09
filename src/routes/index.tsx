@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { SiteFooter } from "@/components/SiteNav";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Sparkles, Compass, Map, BarChart3, Search, Loader2 } from "lucide-react";
+import { Compass, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
