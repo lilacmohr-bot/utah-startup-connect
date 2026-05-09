@@ -2,7 +2,7 @@ import { Link, useRouter } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { Compass, Map, LayoutDashboard, Shield, ExternalLink, BarChart3, Briefcase, DollarSign } from "lucide-react";
+import { Compass, Map, LayoutDashboard, Shield, ExternalLink, BarChart3, DollarSign } from "lucide-react";
 
 export function SiteNav({ variant = "light" }: { variant?: "light" | "dark" }) {
   const { user, isAdmin, signOut } = useAuth();
