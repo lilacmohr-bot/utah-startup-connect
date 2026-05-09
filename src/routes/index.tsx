@@ -3,12 +3,13 @@ import { Link } from "@tanstack/react-router";
 import { SiteFooter } from "@/components/SiteNav";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Compass, Search, X } from "lucide-react";
+import { Compass, Search, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import HeroLiveMap, { SECTOR_LEGEND, type HeroLiveMapHandle } from "@/components/HeroLiveMap";
 import { awardBadge } from "@/lib/badges";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,8 +31,41 @@ function Index() {
   const [companies, setCompanies] = useState<Array<{ id: string; name: string; sector: string | null }>>([]);
   const [activeSectors, setActiveSectors] = useState<Set<string>>(new Set());
   const [showSuggest, setShowSuggest] = useState(false);
+  const [heroStats, setHeroStats] = useState<{
+    companies: number;
+    resources: number;
+    sectors: number;
+    latest: { name: string; sector: string | null; id: string } | null;
+  }>({ companies: 0, resources: 0, sectors: 0, latest: null });
   const flyToRef = useRef<HeroLiveMapHandle | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Load real ecosystem counts + freshest company
+  useEffect(() => {
+    let active = true;
+    Promise.all([
+      supabase.from("companies").select("id, name, sector", { count: "exact" }).eq("status", "active"),
+      supabase.from("resources").select("id", { count: "exact", head: true }).eq("is_active", true),
+      supabase
+        .from("companies")
+        .select("id, name, sector, created_at")
+        .eq("status", "active")
+        .order("created_at", { ascending: false })
+        .limit(1),
+    ]).then(([c, r, latest]) => {
+      if (!active) return;
+      const sectors = new Set((c.data ?? []).map((x: any) => x.sector).filter(Boolean));
+      setHeroStats({
+        companies: c.count ?? c.data?.length ?? 0,
+        resources: r.count ?? 0,
+        sectors: sectors.size,
+        latest: latest.data?.[0]
+          ? { id: latest.data[0].id, name: latest.data[0].name, sector: latest.data[0].sector }
+          : null,
+      });
+    });
+    return () => { active = false; };
+  }, []);
 
   const STATIC_SUGGESTIONS = [
     "Find seed capital",
@@ -307,10 +341,10 @@ function Index() {
         {/* Ecosystem Stats Banner */}
         <div className="relative z-10 mt-auto w-full max-w-7xl border-t border-foreground/10 pt-8 pb-4">
           <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-6">
-            <HeroStat value="450" label="Active Companies" />
-            <HeroStat value="85" label="State Resources" />
-            <HeroStat value="120" label="Capital Sources" />
-            <HeroStat value="12" label="Rural Programs" />
+            <HeroStat value={heroStats.companies} label="Active Companies" />
+            <HeroStat value={heroStats.resources} label="State Resources" />
+            <HeroStat value={heroStats.sectors} label="Sectors Covered" />
+            <NewThisWeek latest={heroStats.latest} />
           </div>
         </div>
       </section>
@@ -559,19 +593,80 @@ function StatBlock({ n, l }: { n: number; l: string }) {
   );
 }
 
-function HeroStat({ value, label }: { value: string; label: string }) {
+function HeroStat({ value, label }: { value: number; label: string }) {
+  const [count, setCount] = useState(0);
+
+  // Looping count-up: animates whenever the target value changes,
+  // and replays every ~9s so the hero feels alive.
+  useEffect(() => {
+    if (!value) return;
+    let raf = 0;
+    const run = () => {
+      const start = performance.now();
+      const duration = 1600;
+      const tick = (now: number) => {
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        setCount(Math.floor(eased * value));
+        if (p < 1) raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+    };
+    run();
+    const loop = setInterval(() => {
+      setCount(0);
+      run();
+    }, 9000);
+    return () => { cancelAnimationFrame(raf); clearInterval(loop); };
+  }, [value]);
+
   return (
     <div className="flex flex-col items-center text-center">
       <div
-        className="text-4xl md:text-5xl font-normal text-foreground/90 leading-none"
+        className="text-4xl md:text-5xl font-normal text-foreground/90 leading-none tabular-nums"
         style={{ fontFamily: "var(--font-display)" }}
       >
-        {value}
+        {count}
         <span className="text-foreground/60">+</span>
       </div>
       <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-foreground/50">
         {label}
       </p>
     </div>
+  );
+}
+
+function NewThisWeek({
+  latest,
+}: {
+  latest: { id: string; name: string; sector: string | null } | null;
+}) {
+  if (!latest) {
+    return (
+      <div className="flex flex-col items-center text-center">
+        <div className="text-4xl md:text-5xl font-normal text-foreground/40 leading-none" style={{ fontFamily: "var(--font-display)" }}>—</div>
+        <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-foreground/50">New this week</p>
+      </div>
+    );
+  }
+  return (
+    <Link
+      to="/map/company/$id"
+      params={{ id: latest.id }}
+      className="group flex flex-col items-center text-center"
+    >
+      <div className="flex items-center gap-1.5 leading-none">
+        <Sparkles className="h-4 w-4 text-primary animate-pulse" />
+        <span
+          className="text-2xl md:text-3xl font-normal text-foreground/90 truncate max-w-[180px] group-hover:text-primary transition"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          {latest.name}
+        </span>
+      </div>
+      <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-primary/80">
+        New this week
+      </p>
+    </Link>
   );
 }

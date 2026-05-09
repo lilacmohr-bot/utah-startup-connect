@@ -201,6 +201,8 @@ export default function HeroLiveMap({
         mapStyle="mapbox://styles/mapbox/light-v11"
         style={{ width: "100%", height: "100%" }}
         attributionControl={false}
+        scrollZoom={false}
+        dragRotate={false}
         interactive
         onLoad={handleLoad}
         onZoom={(e) => setZoom(e.viewState.zoom)}
@@ -225,6 +227,7 @@ export default function HeroLiveMap({
                 onClick={(e) => e.stopPropagation()}
               >
                 <LogoPin name={c.name} logoUrl={c.logo_url} color={color} />
+                {c.hiring_status && <span className="hero-pin-hiring" />}
                 {showLabels && <div className="hero-pin-label">{c.name}</div>}
               </Link>
             </Marker>
