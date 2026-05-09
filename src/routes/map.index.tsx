@@ -123,6 +123,12 @@ function MapPage() {
   const [mapboxToken, setMapboxToken] = useState<string>("");
   const [tokenLoading, setTokenLoading] = useState(true);
   useEffect(() => {
+    const viteToken = (import.meta.env.VITE_MAPBOX_TOKEN as string | undefined) ?? "";
+    if (viteToken) {
+      setMapboxToken(viteToken);
+      setTokenLoading(false);
+      return;
+    }
     supabase.functions
       .invoke("get-mapbox-token")
       .then(({ data }) => setMapboxToken((data as any)?.token ?? ""))
