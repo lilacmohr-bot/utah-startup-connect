@@ -65,12 +65,12 @@ export function buildAvatarUrl(seed: string, opts: AvatarOptions = {}): string {
   if (opts.facialHair === "_none") {
     url += `&facialHairProbability=0`;
   } else if (opts.facialHair) {
-    url += `&facialHair[]=${opts.facialHair}`;
+    url += `&facialHair[]=${opts.facialHair}&facialHairProbability=100`;
   }
   if (opts.accessories === "_none") {
     url += `&accessoriesProbability=0`;
   } else if (opts.accessories) {
-    url += `&accessories[]=${opts.accessories}`;
+    url += `&accessories[]=${opts.accessories}&accessoriesProbability=100`;
   }
   if (opts.clothing) url += `&clothing[]=${opts.clothing}`;
   if (opts.clothingColor) url += `&clothesColor[]=${CLOTHES_HEX[opts.clothingColor] ?? opts.clothingColor}`;

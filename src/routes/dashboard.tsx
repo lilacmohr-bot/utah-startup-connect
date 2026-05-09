@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/Avatar";
 import { AvatarCustomizer } from "@/components/AvatarCustomizer";
 import { BadgeShelf } from "@/components/BadgeShelf";
+import { Palette } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — 5iO" }] }),
@@ -70,7 +71,7 @@ function Dashboard() {
           <BadgeShelf userId={user.id} />
         </div>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
+        <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <Card className="p-6">
             <h2 className="font-bold" style={{ fontFamily: "var(--font-display)" }}>Your company</h2>
             {company ? (
@@ -104,6 +105,18 @@ function Dashboard() {
             </p>
             <Link to="/navigator">
               <Button size="sm" className="mt-4">Open Navigator</Button>
+            </Link>
+          </Card>
+          <Card className="p-6">
+            <div className="flex items-center gap-2">
+              <Palette className="h-4 w-4 text-primary" />
+              <h2 className="font-bold" style={{ fontFamily: "var(--font-display)" }}>Theme</h2>
+            </div>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Personalize your experience with Utah nature themes.
+            </p>
+            <Link to="/settings/theme">
+              <Button size="sm" variant="outline" className="mt-4">Customize theme</Button>
             </Link>
           </Card>
         </div>
