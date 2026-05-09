@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { ArrowRight, ExternalLink, Loader2, Search, Send } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { buildAvatarUrl } from "@/components/Avatar";
 
 export const Route = createFileRoute("/navigator")({
   head: () => ({
@@ -522,24 +523,54 @@ function ChatPanel({ query, results, loading }: { query: string; results: any[];
               });
             }
           } catch {
-            buf = line + "\n" + buf;
-            break;
+            // skip unparseable SSE lines (e.g. metadata, thinking tokens)
           }
         }
       }
+      if (!assistant) {
+        setMessages((m) => {
+          const copy = [...m];
+          copy[copy.length - 1] = { role: "assistant", content: "Sorry, I didn't get a response. Please try again." };
+          return copy;
+        });
+      }
     } catch (e: any) {
+      setMessages((m) => {
+        const last = m[m.length - 1];
+        if (last?.role === "assistant" && last.content === "") {
+          const copy = [...m];
+          copy[copy.length - 1] = { role: "assistant", content: "Something went wrong. Please try again." };
+          return copy;
+        }
+        return [...m, { role: "assistant", content: "Something went wrong. Please try again." }];
+      });
       toast.error(e.message);
     } finally {
       setStreaming(false);
     }
   };
 
+  const guideAvatarUrl = buildAvatarUrl("navigator-guide", {
+    hair: "shortFlat",
+    hairColor: "black",
+    skinColor: "light",
+    facialHair: "_none",
+    accessories: "prescription01",
+    clothing: "blazerAndShirt",
+    clothingColor: "blue03",
+    eyeType: "default",
+    eyebrowType: "default",
+    mouthType: "smile",
+  });
+
   return (
     <Card className="flex h-[480px] flex-col p-0">
-      <div className="border-b border-border px-4 py-3">
-        <p className="text-xs uppercase tracking-widest text-primary" style={{ fontFamily: "var(--font-accent)" }}>
-          Navigator AI
-        </p>
+      <div className="flex items-center gap-3 border-b border-border px-4 py-2">
+        <img src={guideAvatarUrl} alt="Guide" className="h-10 w-10 rounded-full bg-muted" />
+        <div>
+          <p className="text-sm font-semibold leading-none">Guide</p>
+          <p className="text-xs text-muted-foreground">Navigator AI</p>
+        </div>
       </div>
       <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
         {messages.map((m, i) => (
