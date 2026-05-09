@@ -9,8 +9,39 @@ import { Input } from "@/components/ui/input";
 import { Briefcase, MapPin, Plus, Search, RefreshCw } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import Map, { Marker, Popup, NavigationControl } from "react-map-gl/mapbox";
+import Map, { Marker, Popup } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
+
+const SECTOR_VAR: Record<string, string> = {
+  Tech: "var(--sector-tech)",
+  "Life Sciences": "var(--sector-life)",
+  Aerospace: "var(--sector-aero)",
+  Energy: "var(--sector-energy)",
+  Outdoor: "var(--sector-outdoor)",
+  Manufacturing: "var(--sector-mfg)",
+  Other: "var(--sector-other)",
+};
+const COUNTIES = ["Salt Lake", "Utah", "Davis", "Weber", "Washington", "Cache", "Summit"];
+const SIZES = ["1-10", "11-50", "51-200", "200+"];
+function inferCounty(addr?: string | null): string {
+  if (!addr) return "Other";
+  const a = addr.toLowerCase();
+  if (a.includes("salt lake") || a.includes(" slc")) return "Salt Lake";
+  if (a.includes("provo") || a.includes("orem") || a.includes("lehi") || a.includes("utah county")) return "Utah";
+  if (a.includes("ogden") || a.includes("weber")) return "Weber";
+  if (a.includes("layton") || a.includes("bountiful") || a.includes("davis")) return "Davis";
+  if (a.includes("st. george") || a.includes("st george") || a.includes("washington")) return "Washington";
+  if (a.includes("logan") || a.includes("cache")) return "Cache";
+  if (a.includes("park city") || a.includes("summit")) return "Summit";
+  return "Other";
+}
+function inferSize(employees?: string | null): string {
+  if (!employees) return "1-10";
+  if (/200\+|201|500|1000/.test(employees)) return "200+";
+  if (/51|100|150|200/.test(employees)) return "51-200";
+  if (/11|20|30|50/.test(employees)) return "11-50";
+  return "1-10";
+}
 
 function getEffectiveLogo(company: any): string | null {
   if (company.logo_url) return company.logo_url;
